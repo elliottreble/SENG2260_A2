@@ -1,16 +1,15 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <HoloLensView />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HoloLensView from './components/HoloLensView.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    HoloLensView
+}
 }
 </script>
 
