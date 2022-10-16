@@ -1,97 +1,45 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/Home.vue";
-import Main from "../layouts/main/Main.vue";
-import Register from "../views/Register.vue";
-import { getAuth } from "firebase/auth";
-import Daily from "../views/Daily.vue";
-import Dashboard from "../views/Dashboard.vue";
-
-export const sideMenuRoutes = [
-  {
-    path: 'side-menu',
-    component: () => import('../components/SideMenu.vue')
-  },
-]
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "default",
+    component: () => 
+      import("./components/DefaultView.vue")
   },
   {
-    path: "/register",
-    name: "Register",
+    path: "/restaurant_list",
+    name: "RestaurantList",
     //component: Register,
     // // route level code-splitting
     // // this generates a separate chunk (about.[hash].js) for this route
     // // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Register.vue"),
+      import(/* webpackChunkName: "about" */ "./components/RestaurantList.vue"),
   },
   {
-    path: "/forgot-password",
-    name: "ForgotPassword",
+    path: "/restaurant_map",
+    name: "RestaurantMap",
+    //component: Register,
+    // // route level code-splitting
+    // // this generates a separate chunk (about.[hash].js) for this route
+    // // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/ForgotPassword.vue"),
+      import(/* webpackChunkName: "about" */ "./components/RestaurantMap.vue"),
   },
   {
-    path: "/reset-password",
-    name: "ResetPassword",
+    path: "/menu/:restaurant",
+    name: "menu",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/ResetPassword.vue"),
+      import("./components/Menu.vue")
   },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () =>
-      import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
-    meta: {
-      authRequired: true
-    }
-  },
-  {
-    path: '/dashboard/daily/:date',
-    name: 'Daily',
-    component: Daily
-  },
-  {
-    path: '/patients',
-    name: 'Patients',
-    component: () => import(/* webpackChunkName: "dashboard" */ '../views/Patients.vue'),
-    children: sideMenuRoutes
+    path: "/cart",
+    name: "cart",
+    component: () => 
+      import("./components/Cart.vue")
+  }
 
-  },
-  {
-    path: '/professionals',
-    name: 'Professionals',
-    component: () => import(/* webpackChunkName: "dashboard" */ '../views/Professionals.vue'),
-    children: sideMenuRoutes
-
-  },
-  {
-    path: '/patient/:id',
-    name: 'Patient',
-    component: () => import(/* webpackChunkName: "dashboard" */ '../views/PatientSummary.vue'),
-    children: sideMenuRoutes
-
-  },
-  {
-    path: '/dashboard-main',
-    name: 'DashboardMain',
-    component: () =>
-      import(/* webpackChunkName: "dashboard" */ '../views/DashboardMain.vue'),
-    children: sideMenuRoutes
-  },
-  {
-    path: '/profile/:id',
-    name: 'Profile',
-    component: () =>
-      import(/* webpackChunkName: "dashboard" */ '../views/Profile.vue'),
-    meta: {
-      authRequired: true
-    }
-  },
 ];
 
 
@@ -100,26 +48,5 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.authRequired)) {
-    const auth = getAuth();
-    console.log(auth);
-    if (!!auth.currentUser) {
-      next();
-    }
-    else if (window.location.href.includes("localhost")) {
-      console.log("debug mode routing overloaded");
-      next();
-    }
-    else {
-      alert('You must be logged in to see this page');
-      next({
-        path: '/',
-      });
-    }
-  } else {
-    next();
-  }
-});
 
 export default router;

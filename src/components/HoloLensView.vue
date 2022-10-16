@@ -1,14 +1,15 @@
 <template>
-    <div id="background div" class="background" :style="{ backgroundImage: 'url(' + ImgUrl + ')' }">
-        <restaurant-list></restaurant-list>
+    <div>
+        <div id="background div" class="background"  :key="selectedBackgroundIndex" >
+            <router-view></router-view>
+        </div>
     </div>
 </template>
   
   <script>
-    import RestaurantList from "./RestaurantList.vue"
+    import {useStore} from "../store";
   export default {
     components: {
-        RestaurantList
     },
     name: 'HoloLensView',
     data() {
@@ -19,20 +20,51 @@
                 "Hallway 3",
                 "Food Court",
             ],
-            selectedBackgroundIndex: 0
+            selectedBackgroundIndex: 0,
+            cssProps: [
+                {
+                backgroundImage: `url(${require('@/assets/HallwayBlank.png')})`
+                },
+                {
+                backgroundImage: `url(${require('@/assets/Hallway 2.png')})`
+                },
+                {
+                backgroundImage: `url(${require('@/assets/Hallway 3.png')})`
+                },
+                {
+                backgroundImage: `url(${require('@/assets/Food Court.png')})`
+                },
+            ]
+        }
+    },
+    watch: {
+        'CurrentStep': function() {
+            console.log("Current step updated");
+            document.body.style.backgroundImage = this.CSSProps.backgroundImage;
         }
     },
     computed: {
-        CurrentBackground() {
-            console.log(this.backgroundImages)
-            let image = this.backgroundImages[this.selectedBackgroundIndex] + ".png";
-            console.log(typeof image);
-            return image;
+        CurrentStep() {
+            let cart = useStore();
+            let step = cart.Step
+            console.log("hololens on step " + step);
+            return step;
+        },
+        CSSProps() {
+            let result = this.cssProps[this.CurrentStep]
+            console.log(result);
+            return result;
         },
         ImgUrl() {
+            let cart = useStore();
+            let step = cart.Step
+            console.log("hololens on step " + step);
             var images = require.context('../assets/', false, /\.png$/)
-            let result = images('./' + this.CurrentBackground)
-            console.log(result);
+            let image = this.backgroundImages[step] + ".png";
+            let imgURL= images('./' + image)
+            console.log("background image result " + imgURL);
+            let result = { backgroundImage: 'url(' + imgURL + ')' }
+            console.log("background image result " + result);
             return result;
         },
         ImageStyle() {
@@ -60,6 +92,7 @@
     width: 1800px;
     height: 1000px;
     background-size: 100%;
+    background-image: v-bind('CSSProps.backgroundImage');
   }
   </style>
   

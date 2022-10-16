@@ -1,37 +1,37 @@
 <template>
     <n-card class="restaurantList" closable @close="handleClose">
-        <n-list>
-            <n-list-item v-for="(restaurant, index) in restaurants" :key="restaurant.name">
-                <n-button-group size="large">
-                    <n-button @click="ViewMenuClicked(index)"><n-avatar :src="ImgUrl(restaurant.img)" /></n-button>
-                    <n-button @click="ViewMenuClicked(index)">{{restaurant.name}}</n-button>
-                    <n-button disabled>{{restaurant.distance}}</n-button>
-                </n-button-group>
-            </n-list-item>
-        </n-list>
+        
+        <template #cover>
+            <n-popover trigger="hover" :delay="500" :duration="500">
+                <template #trigger>
+                    <img :src="ImgUrl()" alt="Map View of Restaurants" />
+                </template>
+                <restaurant-popover></restaurant-popover>
+            </n-popover>
+        </template>
         <template #action>
             <n-button-group size="large">
                 <n-button type="primary" @click="ViewCartClicked()">View Cart</n-button>
-                <n-button type="info" @click="ViewMapClicked()">View Map</n-button>
+                <n-button type="info" @click="ViewListClicked()">View List</n-button>
             </n-button-group>
         </template>
     </n-card>
 </template>
   
   <script>
-  import { NButton, NAvatar, NList, NListItem, NCard, NButtonGroup } from 'naive-ui'
+  import { NButton, NCard, NButtonGroup, NPopover } from 'naive-ui'
+  import RestaurantPopover from "./RestaurantPopover.vue"
 import router from '../router'
   
   export default {
     components: {
-        NList,
-        NListItem,
-        NAvatar,
         NButton,
         NCard,
-        NButtonGroup
+        NButtonGroup,
+        NPopover,
+        RestaurantPopover
     },
-    name: 'RestaurantList',
+    name: 'RestaurantMap',
     data() {
         return {
             restaurants: [
@@ -62,18 +62,15 @@ import router from '../router'
 
     }, 
     methods: {
-        ImgUrl(image) {
-            // var images = require.context('../assets/', false, /\.png$/)
-            // let result = images('./' + image)
-            // console.log(result);
-            // return result;
-            return require('../assets/'+image)
+        ImgUrl() {
+            let image = "RestaurantsMapView.png"
+            var images = require.context('../assets/', false, /\.png$/)
+            let result = images('./' + image)
+            console.log(result);
+            return result;
         },
-        ViewMapClicked() {
-            router.push("restaurant_map");
-        },
-        ViewMenuClicked(index) {
-          router.push({ name: 'menu', params: { restaurant: index } })
+        ViewListClicked() {
+            router.push({ path: '/restaurant_list', replace: true })
         },
         ViewCartClicked() {
             router.push("cart");
