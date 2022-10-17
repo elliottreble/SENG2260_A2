@@ -5,7 +5,7 @@
         <n-list>
             <n-list-item v-for="item in Menu" :key="item.name">
                 <n-button-group size="large">
-                    <n-button><n-avatar :src="ImgUrl(item.img)" /></n-button>
+                    <n-button @click="ViewItemClicked(item)"><n-avatar :src="ImgUrl(item.img)" /></n-button>
                     <n-button @click="ViewItemClicked(item)">{{item.name}}</n-button>
                     <n-button disabled>${{item.price}}</n-button>
                 </n-button-group>

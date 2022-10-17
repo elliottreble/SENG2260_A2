@@ -127,7 +127,7 @@ import { useStore } from "../store"
             router.push("/");
         },
         NavigateToDestination() {
-            router.push("/a")
+            router.push("/")
         }
         
     }
