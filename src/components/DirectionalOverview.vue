@@ -7,6 +7,7 @@
   
   <script>
   import { useStore } from "../store"
+  import router from '../router'
   export default {
     components: {
 
@@ -41,6 +42,15 @@
                 this.step ++;
                 let cart = useStore();
                 cart.stepForward();
+                if(this.step == 1) {
+                    router.push("Hallway 2")
+                }
+                else if (this.step == 2) {
+                    router.push("Hallway 3")
+                }
+                else if (this.step == 3) {
+                    router.push("Food Court")
+                }
             }
 
         },

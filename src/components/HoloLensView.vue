@@ -41,9 +41,19 @@
         'CurrentStep': function() {
             console.log("Current step updated");
             document.body.style.backgroundImage = this.CSSProps.backgroundImage;
+        },
+        'RouteName': function() {
+            console.log(this.CSSProps.backgroundImage);
+            document.body.style.backgroundImage = this.CSSProps.backgroundImage;
         }
     },
     computed: {
+        RouteName() {
+            const route = this.$route.name;
+            console.log(this.$route.name);
+            console.log(route)
+            return route;
+        },
         CurrentStep() {
             let cart = useStore();
             let step = cart.Step
@@ -51,7 +61,7 @@
             return step;
         },
         CSSProps() {
-            let result = this.cssProps[this.CurrentStep]
+            let result = this.cssProps[this.CurrentStep];
             console.log(result);
             return result;
         },
