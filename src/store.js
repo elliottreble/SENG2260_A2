@@ -5,7 +5,7 @@ export const useStore = defineStore('cart', {
   state: () => ({
      items: [],
      restaurants: [],
-     orderPlaced: true,
+     orderPlaced: false,
      step: 0
   }),
   // could also be defined as

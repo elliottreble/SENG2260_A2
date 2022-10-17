@@ -1,5 +1,5 @@
 <template>
-    <div @click="onClick" class="background">
+    <div @click="onClick" class="background" >
         <img :src="ImgUrl(directionArrows[step])" alt="direction" class="direction" />
         <img :src="ImgUrl(minimapStates[step])" alt="minimap" class="minimap" />
     </div> 
@@ -16,7 +16,7 @@
     name: 'DirectionalOverview',
     data() {
         return {
-            step: 0,
+            step: 1,
             minimapStates: [
                 "Minimap.png",
                 "Minimap 2.png",
@@ -28,21 +28,7 @@
                 "Arrows Right.png",
                 "Arrows Left.png",
                 "Arrow.png"
-            ],
-            cssProps: [
-                {
-                backgroundImage: `url(${require('@/assets/HallwayBlank.png')})`
-                },
-                {
-                backgroundImage: `url(${require('@/assets/Hallway 2.png')})`
-                },
-                {
-                backgroundImage: `url(${require('@/assets/Hallway 3.png')})`
-                },
-                {
-                backgroundImage: `url(${require('@/assets/Food Court.png')})`
-                },
-            ],
+            ]
 
         }
 
@@ -66,10 +52,14 @@
                     router.push("Food Court")
                 }
             }
+
         },
         ImgUrl(image) {
             return require('../assets/'+image)
         },
+        Background() {
+          return this.ImgUrl("Hallway 3.png");
+        }
     }
   }
   </script>
@@ -87,7 +77,7 @@
     width: 1800px;
     height: 1000px;
     background-size: 100%;
-    background-image: v-bind('cssProps[step]');
+    background: v-bind('Background')
   }
   .restaurantList {
     width: 400px;

@@ -32,6 +32,12 @@ const routes = [
       import("./components/DefaultView.vue")
   },
   {
+    path: "/main_menu",
+    name: "MainMenu",
+    component: () => 
+      import("./components/MainMenu.vue")
+  },
+  {
     path: "/restaurant_list",
     name: "RestaurantList",
     //component: Register,
@@ -62,6 +68,18 @@ const routes = [
     name: "cart",
     component: () => 
       import("./components/Cart.vue")
+  },
+  {
+    path: "/order_confirmed",
+    name: "OrderConfirmed",
+    component: () => 
+      import("./components/OrderConfirmed.vue")
+  },
+  {
+    path: "/a",
+    name: "a",
+    component: () =>
+      import("./components/DirectionalOverviewA.vue")
   }
 
 ];

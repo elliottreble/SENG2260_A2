@@ -1,9 +1,14 @@
 <template>
-    <n-card class="restaurantList" title="Order Details" closable @close="handleClose">
-        <h3>
-            {{Restaurant}}
-        </h3>
-
+    <n-card class="restaurantList" title="Order Confirmed" closable @close="handleClose">
+        <template #cover>
+            <img :src="ImgUrl()" width="100px" height="auto">
+        </template>
+        <template #header-extra>
+            <n-icon color="green" size="40">
+                <check-circle-round></check-circle-round>
+            </n-icon>
+        </template>
+        {{Restaurant}}
         <n-table>
             <tbody>
                 <tr v-for="item in Items" :key="item.name">
@@ -18,29 +23,31 @@
         </template>
 
         <template #action>
-                <n-button type="info" @click="PlaceOrderClicked()">Place Order</n-button>
+            <n-button type="primary" @click="NavigateToDestination()">
+                Navigate to Destination
+            </n-button>
         </template>
-       
     </n-card>
 </template>
   
   <script>
-  import { NButton, NCard, NTable, useNotification,} from 'naive-ui'
+  import { NButton, NCard, useNotification, NIcon, NTable } from 'naive-ui'
 import router from '../router'
 import { useStore } from "../store"
-  
+  import { CheckCircleRound } from '@vicons/material';
   export default {
     components: {
         NButton,
         NCard,
+        CheckCircleRound,
+        NIcon,
         NTable
     },
-    name: 'Cart',
+    name: 'OrderConfirmed',
     data() {
         return {
-            notification: useNotification()
+            notification: useNotification(), 
         }
-        
     },
     computed: {
         Items() {
@@ -68,12 +75,12 @@ import { useStore } from "../store"
         }
     }, 
     methods: {
-        ImgUrl(image) {
+        ImgUrl() {
             // var images = require.context('../assets/', false, /\.png$/)
             // let result = images('./' + image)
             // console.log(result);
             // return result;
-            return require('../assets/'+image)
+            return require('../assets/RestaurantsMapView.png')
         },
         ViewListClicked() {
             router.push('restaurant_list');
@@ -88,28 +95,41 @@ import { useStore } from "../store"
         MakeMealAndAddToCart() {
             let cart = useStore();
 
-            cart.addMeal(this.SelectedItem);
+            cart.addMeal({...this.SelectedItem});
             this.showModal = false;
-        },
-        AddItemOnly() {
-
-        },
-        PlaceOrderClicked() {
             this.notification.create({
                 title: "HoloAugmented Ordering",
-                description: "Order Placed",
+                description: "Cart Updated",
                 content:
-                "Total: $" + this.Total,
+                this.SelectedItem.name + " Meal added to Cart",
                 meta: new Date().toLocaleString(),
                 duration: 5000,
             });
+        },
+        AddItemOnly() {
             let cart = useStore();
-            cart.placeOrder();
-            router.push({path: "/order_confirmed"})
+
+            cart.addItem(this.SelectedItem);
+            this.showModal = false;
+            this.notification.create({
+                title: "HoloAugmented Ordering",
+                description: "Cart Updated",
+                content:
+                this.SelectedItem.name + " added to Cart",
+                meta: new Date().toLocaleString(),
+                duration: 5000,
+            });
+        },
+        ViewCartClicked() {
+            router.push({ path: '/cart', replace: true });
         },
         handleClose() {
             router.push("/");
+        },
+        NavigateToDestination() {
+            router.push("/a")
         }
+        
     }
   }
   </script>

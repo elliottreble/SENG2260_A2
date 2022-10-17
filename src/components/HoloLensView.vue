@@ -14,6 +14,7 @@
     name: 'HoloLensView',
     data() {
         return {
+            renderComponent: true,
             backgroundImages: [
                 "HallwayBlank",
                 "Hallway 2",
@@ -34,7 +35,8 @@
                 {
                 backgroundImage: `url(${require('@/assets/Food Court.png')})`
                 },
-            ]
+            ],
+            image: `url(${require('@/assets/HallwayBlank.png')})`
         }
     },
     watch: {
@@ -45,6 +47,9 @@
         'RouteName': function() {
             console.log(this.CSSProps.backgroundImage);
             document.body.style.backgroundImage = this.CSSProps.backgroundImage;
+            console.log(this.CSSProps.backgroundImage)
+            this.image = this.CSSProps.backgroundImage;
+            this.$forceUpdate()
         }
     },
     computed: {
@@ -102,7 +107,7 @@
     width: 1800px;
     height: 1000px;
     background-size: 100%;
-    background-image: v-bind('CSSProps.backgroundImage');
+    background-image: v-bind('image');
   }
   </style>
   

@@ -1,14 +1,19 @@
 <template>
-  <HoloLensView />
+  <div>
+  <n-notification-provider>
+    <HoloLensView />
+  </n-notification-provider>
+</div>
 </template>
 
 <script>
 import HoloLensView from './components/HoloLensView.vue';
-
+import {NNotificationProvider} from "naive-ui";
 export default {
   name: 'App',
   components: {
-    HoloLensView
+    HoloLensView,
+    NNotificationProvider
 }
 }
 </script>

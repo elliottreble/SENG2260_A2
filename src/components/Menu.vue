@@ -1,6 +1,7 @@
 <template>
     <n-card class="restaurantList" :title="RestaurantName" closable @close="handleClose">
-
+        <label for="diet">Dietary Requirements</label>
+        <n-select id="diet" :options="dietaryOptions" v-model:value="dietaryRequirements" multiple>Dietary Requirements</n-select>
         <n-list>
             <n-list-item v-for="item in Menu" :key="item.name">
                 <n-button-group size="large">
@@ -41,7 +42,7 @@
 </template>
   
   <script>
-  import { NButton, NCard, NButtonGroup, NList, NListItem, NAvatar, NModal  } from 'naive-ui'
+  import { NButton, NCard, NButtonGroup, NList, NListItem, NAvatar, NModal, NSelect, useNotification } from 'naive-ui'
 import router from '../router'
 import { useStore } from "../store"
   
@@ -53,11 +54,60 @@ import { useStore } from "../store"
         NList,
         NListItem,
         NAvatar,
-        NModal
+        NModal,
+        NSelect
     },
-    name: 'RestaurantMap',
+    name: 'RestaurantMenu',
     data() {
         return {
+            notification: useNotification(), 
+            dietaryRequirements: [],
+            dietaryOptions: [
+                {
+                    label: "Dairy Free",
+                    value: "Dairy Free"
+                },
+                {
+                    label: "Egg Allergy",
+                    value: "Egg Allergy"
+                },
+                {
+                    label: "Gluten Free",
+                    value: "Gluten Free"
+                },
+                {
+                    label: "Halal",
+                    value: "Halal"
+                },
+                {
+                    label: "Kosher",
+                    value: "Kosher"
+                },
+                {
+                    label: "Nut Allergy",
+                    value: "Nut Allergy"
+                },
+                {
+                    label: "Pescetarian",
+                    value: "Pescetarian"
+                },
+                {
+                    label: "Shellfish Allergy",
+                    value: "Shellfish Allergy"
+                },
+                {
+                    label: "Soy Allergy",
+                    value: "Soy Allergy"
+                },
+                {
+                    label: "Vegan",
+                    value: "Vegan"
+                },
+                {
+                    label: "Vegetarian",
+                    value: "Vegetarian"
+                }
+            ],
             showModal: false,
             SelectedItem: {},
             restaurants: [
@@ -89,22 +139,26 @@ import { useStore } from "../store"
                         {
                             name: "Chicken Kebab",
                             img: "Chicken Kebab.png",
-                            price: 11.50
+                            price: 11.50,
+                            dietSafe: []
                         },
                         {
                             name: "Doner Kebab",
                             img: "Doner Kebab.png",
-                            price: 12.50
+                            price: 12.50,
+                            dietSafe: []
                         },
                         {
                             name: "Falafel Kebab",
                             img: "Falafel Kebab.png",
-                            price: 9.50
+                            price: 9.50,
+                            dietSafe: ["Vegetarian", "Halal"]
                         },
                         {
                             name: "Mixed Kebab",
                             img: "Mixed Kebab.png",
-                            price: 12.50
+                            price: 12.50,
+                            dietSafe: []
                         },
                     ]
                 }, 
@@ -114,17 +168,20 @@ import { useStore } from "../store"
                         {
                             name: "Meatlovers Pizza",
                             img: "Meatlovers Pizza.jpg",
-                            price: 15
+                            price: 15,
+                            dietSafe: []
                         },
                         {
                             name: "Hawaiian Pizza",
                             img: "Hawaiian Pizza.jpg",
-                            price: 12.50
+                            price: 12.50,
+                            dietSafe: []
                         },
                         {
                             name: "Pepperoni Pizza",
                             img: "Pepperoni Pizza.jpg",
-                            price: 10
+                            price: 10,
+                            dietSafe: []
                         }
                     ]
                 },
@@ -134,17 +191,20 @@ import { useStore } from "../store"
                         {
                             name: "Beef Burger",
                             img: "Beef Burger.png",
-                            price: 13.50
+                            price: 13.50,
+                            dietSafe: []
                         },
                         {
                             name: "Chicken Burger",
                             img: "Chicken Burger.png",
-                            price: 11.50
+                            price: 11.50,
+                            dietSafe: []
                         },
                         {
                             name: "Fish Burger",
                             img: "Fish Burger.png",
-                            price: 12.50
+                            price: 12.50,
+                            dietSafe: ["Pescetarian"]
                         },
                     ]
                 },
@@ -154,17 +214,20 @@ import { useStore } from "../store"
                         {
                             name: "Mixed Taco",
                             img: "Mixed Taco.png",
-                            price: 5.50
+                            price: 5.50,
+                            dietSafe: []
                         },
                         {
                             name: "Chicken Taco",
                             img: "Chicken Taco.png",
-                            price: 4.50
+                            price: 4.50,
+                            dietSafe: []
                         },
                         {
                             name: "Beef Taco",
                             img: "Beef Taco.png",
-                            price: 3.50
+                            price: 3.50,
+                            dietSafe: []
                         }
                     ]
                 }
@@ -183,7 +246,18 @@ import { useStore } from "../store"
             let routeParam = this.$route.params.restaurant;
             console.log(routeParam);
             let menu = this.menus[parseInt(routeParam)];
-            return menu.items;
+            let diet = this.dietaryRequirements;
+            let filteredItems = menu.items.filter((item) => {
+                let meetsReq = true;
+                for(let requirement of diet) {
+                    if (!item.dietSafe.includes(requirement)) {
+                        meetsReq = false;
+                    }
+                }
+                return meetsReq;
+            })
+            console.log(filteredItems);
+            return filteredItems;
         },
     }, 
     methods: {
@@ -207,14 +281,30 @@ import { useStore } from "../store"
         MakeMealAndAddToCart() {
             let cart = useStore();
 
-            cart.addMeal(this.SelectedItem);
+            cart.addMeal({...this.SelectedItem});
             this.showModal = false;
+            this.notification.create({
+                title: "HoloAugmented Ordering",
+                description: "Cart Updated",
+                content:
+                this.SelectedItem.name + " Meal added to Cart",
+                meta: new Date().toLocaleString(),
+                duration: 5000,
+            });
         },
         AddItemOnly() {
             let cart = useStore();
 
             cart.addItem(this.SelectedItem);
             this.showModal = false;
+            this.notification.create({
+                title: "HoloAugmented Ordering",
+                description: "Cart Updated",
+                content:
+                this.SelectedItem.name + " added to Cart",
+                meta: new Date().toLocaleString(),
+                duration: 5000,
+            });
         },
         ViewCartClicked() {
             router.push({ path: '/cart', replace: true });
@@ -222,6 +312,7 @@ import { useStore } from "../store"
         handleClose() {
             router.push("/");
         }
+        
     }
   }
   </script>

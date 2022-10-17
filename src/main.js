@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, h } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
@@ -6,4 +6,9 @@ import { createPinia } from 'pinia'
 
 const pinia = createPinia()
 
-createApp(App).use(router).use(pinia).mount('#app')
+const app  = createApp({
+    render: ()=>h(App)
+});
+
+app.use(router).use(pinia);
+app.mount("#app")
