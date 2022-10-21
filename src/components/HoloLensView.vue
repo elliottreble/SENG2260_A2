@@ -101,13 +101,13 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
   }
   .background {
-    width: 1800px;
-    height: 1000px;
-    background-size: 100%;
+    width: device-width;
+    height: auto;
+    background-size: 60%;
     background-image: v-bind('image');
+    position: fixed;
   }
   </style>
   

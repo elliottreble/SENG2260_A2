@@ -1,8 +1,7 @@
 <template>
     <div @click="onClick" class="background">
-        <img :src="ImgUrl(directionArrows[step])" alt="direction" class="direction" />
-        <img :src="ImgUrl(minimapStates[step])" alt="minimap" class="minimap" />
-    </div> 
+        <img :src="ImgUrl(navScreens[step])" alt="" class="img" />
+    </div>
 </template>
   
   <script>
@@ -10,8 +9,6 @@
   import router from '../router'
   export default {
     components: {
-
-
     },
     name: 'DirectionalOverview',
     data() {
@@ -28,6 +25,12 @@
                 "Arrows Right.png",
                 "Arrows Left.png",
                 "Arrow.png"
+            ],
+            navScreens: [
+                "NavA.png",
+                "NavB.png",
+                "NavC.png",
+                "NavD.png"
             ],
             cssProps: [
                 {
@@ -81,7 +84,6 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
   }
   .background {
     width: 1800px;
@@ -104,5 +106,11 @@
     right: 0;
     width: 300px;
   }
+ .img{
+    display:block;
+    width:80%; 
+    height:auto;
+    object-fit: cover;
+}
   </style>
   

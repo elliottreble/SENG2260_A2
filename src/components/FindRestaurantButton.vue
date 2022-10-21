@@ -1,5 +1,5 @@
 <template>
-    <n-button @click="FindRestaurantClicked()">Find a Restaurant with HoloAugmented Ordering</n-button>
+    <n-button @click="FindRestaurantClicked()" class="startButton">Find a Restaurant with HoloAugmented Ordering</n-button>
 </template>
   
   <script>
@@ -43,6 +43,12 @@ import router from '../router'
   .restaurantList {
     width: 400px;
     height: 500px;
+  }
+  .startButton {
+    position:fixed;
+    left: 100px;
+    top: 100px;
+    background-color: aliceblue;
   }
   </style>
   

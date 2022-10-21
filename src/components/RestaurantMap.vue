@@ -63,7 +63,7 @@ import router from '../router'
     }, 
     methods: {
         ImgUrl() {
-            let image = "RestaurantsMapView.png"
+            let image = "Minimap.png"
             var images = require.context('../assets/', false, /\.png$/)
             let result = images('./' + image)
             console.log(result);

@@ -4,7 +4,7 @@
             {{Restaurant}}
         </h3>
 
-        <n-table>
+        <n-table v-if="!loading">
             <tbody>
                 <tr v-for="item in Items" :key="item.name">
                     <td>{{item.name}}</td>
@@ -12,6 +12,7 @@
                 </tr>
             </tbody>
         </n-table>
+        <n-skeleton v-else text></n-skeleton>
 
         <template #footer>
             Total: ${{Total}}
@@ -25,19 +26,22 @@
 </template>
   
   <script>
-  import { NButton, NCard, NTable, useNotification,} from 'naive-ui'
+  import { NButton, NCard, NTable, useNotification, NSkeleton} from 'naive-ui'
 import router from '../router'
 import { useStore } from "../store"
+
   
   export default {
     components: {
         NButton,
         NCard,
-        NTable
+        NTable,
+        NSkeleton
     },
     name: 'Cart',
     data() {
         return {
+            loading: false,
             notification: useNotification()
         }
         
@@ -95,6 +99,7 @@ import { useStore } from "../store"
 
         },
         PlaceOrderClicked() {
+            this.loading = true;
             this.notification.create({
                 title: "HoloAugmented Ordering",
                 description: "Order Placed",
