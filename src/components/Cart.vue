@@ -3,46 +3,100 @@
         <h3>
             {{Restaurant}}
         </h3>
-
-        <n-table v-if="!loading">
-            <tbody>
-                <tr v-for="item in Items" :key="item.name">
-                    <td>{{item.name}}</td>
-                    <td>${{item.price}}</td>
-                </tr>
-            </tbody>
-        </n-table>
+        <div v-if="!loading">
+            <!-- <n-table >
+                <tbody>
+                    <tr v-for="(item, index) in Items" :key="item.name">
+                        <td>{{item.name}}</td>
+                        <td>${{item.price}}</td>
+                        <td><n-button type="danger" @click="removeItem(index)">X</n-button></td>
+                    </tr>
+                </tbody>
+            </n-table> -->
+            <br />
+            <n-grid cols="2">
+                <div v-for="item in Items" :key="item.name">
+                    <n-gi>{{item.name}}
+                    <p v-if="item.name.includes('Meal')">
+                        + Chips
+                        + Drink
+                    </p>
+                    </n-gi>
+                    <n-gi>{{item.price}}</n-gi>
+                </div>
+            </n-grid>
+            <n-list>
+                <n-list-item v-for="item in Items" :key="item.name">
+                    <n-grid cols="4" item-responsive >
+                        <n-gi span="2"><b>{{item.name}}</b></n-gi>
+                        <n-gi>${{item.price}}</n-gi>
+                        <n-gi><n-button type="danger" @click="removeItem(index)">X</n-button></n-gi>
+                        <n-gi v-if="item.name.includes('Meal')">+ Chips</n-gi>
+                        <n-gi v-if="item.name.includes('Meal')" span="3"></n-gi>
+                        <n-gi v-if="item.name.includes('Meal')">+ Drink</n-gi>
+                    </n-grid>
+                </n-list-item>
+                <n-list-item></n-list-item>
+            </n-list>
+            <n-button type="primary" @click="returnToMenu()">Add More Items</n-button>
+        </div>
         <n-skeleton v-else text></n-skeleton>
 
         <template #footer>
             Total: ${{Total}}
         </template>
 
+        
         <template #action>
-                <n-button type="info" @click="PlaceOrderClicked()">Place Order</n-button>
+            <n-button type="info" @click="PlaceOrderClicked()" class="button">Place Order</n-button>
         </template>
        
     </n-card>
 </template>
   
   <script>
-  import { NButton, NCard, NTable, useNotification, NSkeleton} from 'naive-ui'
+  import { NCard,  useNotification, NSkeleton, NButton,NList, NListItem, NGrid, NGi,} from 'naive-ui'
 import router from '../router'
 import { useStore } from "../store"
 
   
   export default {
     components: {
-        NButton,
         NCard,
-        NTable,
-        NSkeleton
+        NSkeleton,
+        NButton,
+        NListItem,
+        NList,
+        NGrid,
+        NGi
     },
     name: 'Cart',
     data() {
         return {
             loading: false,
-            notification: useNotification()
+            notification: useNotification(),
+            restaurants: [
+                {
+                    name: "Next Stop Kebabs",
+                    img: "Next Stop Kebabs.png",
+                    distance: "20m"
+                },
+                {
+                    name: "Pizza Time",
+                    img: "Pizza Time.png",
+                    distance: "35m"
+                },
+                {
+                    name: "Fortnite Burger",
+                    img: "Fortnite Burger.png",
+                    distance: "40m"
+                },
+                {
+                    name: "Taco Flavoured Kisses",
+                    img: "Taco Flavoured Kisses.png",
+                    distance: ">50m"
+                }
+            ]
         }
         
     },
@@ -114,6 +168,21 @@ import { useStore } from "../store"
         },
         handleClose() {
             router.push("/");
+        },
+        removeItem(index) {
+            console.log("removing item")
+            let cart = useStore();
+            cart.removeItem(index);
+        },
+        returnToMenu() {
+            let restaurantName = this.Restaurant;
+            let resIndex = 0;
+            this.restaurants.forEach((value, index) => {
+                if(value.name == restaurantName) {
+                    resIndex = index;
+                }
+            });
+            router.push({ name: 'menu', params: { restaurant: resIndex } });
         }
     }
   }
@@ -135,7 +204,14 @@ import { useStore } from "../store"
   }
   .restaurantList {
     width: 400px;
-    height: 500px;
+    height: 550px;
+  }
+  .button {
+    width: 396px;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
   </style>
   

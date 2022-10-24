@@ -2,21 +2,32 @@
     <n-card class="restaurantList" :title="RestaurantName" closable @close="handleClose">
         <label for="diet">Dietary Requirements</label>
         <n-select id="diet" :options="dietaryOptions" v-model:value="dietaryRequirements" multiple>Dietary Requirements</n-select>
-        <n-list>
-            <n-list-item v-for="item in Menu" :key="item.name">
-                <n-button-group size="large">
-                    <n-button @click="ViewItemClicked(item)"><n-avatar :src="ImgUrl(item.img)" /></n-button>
-                    <n-button @click="ViewItemClicked(item)">{{item.name}}</n-button>
-                    <n-button disabled>${{item.price}}</n-button>
-                </n-button-group>
+
+        <n-list hoverable clickable bordered >
+            <n-list-item v-for="item in Menu" :key="item.name" @click="ViewItemClicked(item)">
+                <n-grid cols="3">
+                    <n-gi>
+                        <n-avatar size="large" :src="ImgUrl(item.img)" />
+                    </n-gi>
+                    <n-gi>
+                        {{item.name}}
+                    </n-gi>
+                    <n-gi>
+                        ${{item.price}}
+                    </n-gi>
+                </n-grid>
             </n-list-item>
         </n-list>
-        <template #action>
+
+        <action-footer></action-footer>
+        <!-- <template #action>
+            <action-footer></action-footer>
             <n-button-group size="large">
                 <n-button type="primary" @click="ViewCartClicked()">View Cart</n-button>
                 <n-button type="info" @click="ViewMapClicked()">View Map</n-button>
             </n-button-group>
-        </template>
+            
+        </template> -->
         <n-modal v-model:show="showModal" style="width: 600px; position: fixed; left: 100px; top: 100px">
             <n-card
             style="width: 350px"
@@ -42,9 +53,10 @@
 </template>
   
   <script>
-  import { NButton, NCard, NButtonGroup, NList, NListItem, NAvatar, NModal, NSelect, useNotification } from 'naive-ui'
+  import { NButton, NCard, NButtonGroup, NList, NListItem, NAvatar, NModal, NSelect, useNotification, NGrid, NGi } from 'naive-ui'
 import router from '../router'
 import { useStore } from "../store"
+import ActionFooter from "./ActionFooter.vue"
   
   export default {
     components: {
@@ -55,7 +67,10 @@ import { useStore } from "../store"
         NListItem,
         NAvatar,
         NModal,
-        NSelect
+        NSelect,
+        NGrid,
+        NGi,
+        ActionFooter
     },
     name: 'RestaurantMenu',
     data() {
@@ -160,6 +175,12 @@ import { useStore } from "../store"
                             price: 12.50,
                             dietSafe: []
                         },
+                        {
+                            name: "Snack Pack",
+                            img: "Snack Pack.jpg",
+                            price: 15,
+                            dietSafe: "Gluten Free"
+                        }
                     ]
                 }, 
                 {
@@ -333,7 +354,10 @@ import { useStore } from "../store"
   }
   .restaurantList {
     width: 400px;
-    height: 500px;
+    height: 550px;
+  }
+  .menu {
+    padding-bottom: 500px;
   }
   </style>
   

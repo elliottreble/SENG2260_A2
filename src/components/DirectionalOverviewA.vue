@@ -81,7 +81,7 @@
   }
   .restaurantList {
     width: 400px;
-    height: 500px;
+    height: 550px;
   }
   .direction {
     position: fixed;

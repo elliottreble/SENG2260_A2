@@ -1,35 +1,42 @@
 <template>
-    <n-card class="restaurantList" closable @close="handleClose">
-        
+    <n-card class="restaurantMap">
+
         <template #cover>
-            <n-popover trigger="hover" :delay="500" :duration="500">
+          <!-- <n-popover trigger="hover" :delay="500" :duration="500">
                 <template #trigger>
                     <img :src="ImgUrl()" alt="Map View of Restaurants" />
                 </template>
                 <restaurant-popover></restaurant-popover>
-            </n-popover>
+            </n-popover> -->
+
+                <img :src="ImgUrl()" @click="ViewMenuClicked()" alt="Map View of Restaurants" />
+
         </template>
+        <!-- <template #default>
+            <img :src="ImgUrl()" @click="ViewMenuClicked()" alt="Map View of Restaurants" height="200px" width="200px" />
+        </template> -->
+        
+        <!-- <img :src="ImgUrl()" @click="ViewMenuClicked()" alt="Map View of Restaurants" width="200px" height="200px" /> -->
+        <!-- <v-img :src="ImgUrl()" alt=""
+            contain
+            height="100px"
+            width="150px">
+        </v-img> -->
         <template #action>
-            <n-button-group size="large">
-                <n-button type="primary" @click="ViewCartClicked()">View Cart</n-button>
-                <n-button type="info" @click="ViewListClicked()">View List</n-button>
-            </n-button-group>
+            <n-button type="info" @click="ViewCartClicked()" class="leftButton">View Cart</n-button>
+            <n-button type="primary" @click="ViewListClicked()" class="rightButton">View Restaurants</n-button>
         </template>
     </n-card>
 </template>
   
   <script>
-  import { NButton, NCard, NButtonGroup, NPopover } from 'naive-ui'
-  import RestaurantPopover from "./RestaurantPopover.vue"
-import router from '../router'
+  import {  NCard, NButton} from 'naive-ui'
+    import router from '../router'
   
   export default {
     components: {
-        NButton,
         NCard,
-        NButtonGroup,
-        NPopover,
-        RestaurantPopover
+        NButton
     },
     name: 'RestaurantMap',
     data() {
@@ -77,6 +84,9 @@ import router from '../router'
         },
         handleClose() {
             router.push("/");
+        },
+        ViewMenuClicked() {
+          router.push({ name: 'menu', params: { restaurant: '0' } })
         }
     }
   }
@@ -96,9 +106,23 @@ import router from '../router'
     height: 1000px;
     background-size: 100%;
   }
-  .restaurantList {
+  .restaurantMap {
     width: 400px;
-    height: 500px;
+    height: 350px;
+  }
+  .leftButton {
+    width: 198px;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+  .rightButton {
+    width: 198px;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    right: 0
   }
   </style>
   

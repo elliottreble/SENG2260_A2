@@ -1,100 +1,57 @@
 <template>
-    <n-card class="restaurantList" title="Order Confirmed" closable @close="handleClose">
-        <template #cover>
-            <img :src="ImgUrl()" width="100px" height="auto">
-        </template>
-        <template #header-extra>
-            <n-icon color="green" size="40">
-                <check-circle-round></check-circle-round>
-            </n-icon>
-        </template>
-        {{Restaurant}}
-        <n-table>
-            <tbody>
-                <tr v-for="item in Items" :key="item.name">
-                    <td><b>{{item.name}}</b>
-                    </td>
-                    <td>${{item.price}}</td>
-                </tr>
-            </tbody>
-        </n-table>
-        <n-grid cols="2">
-            <div v-for="item in Items" :key="item.name">
-                <n-gi>{{item.name}}
-                <p v-if="item.name.includes('Meal')">
-                    + Chips
-                    + Drink
-                </p>
-                </n-gi>
-                <n-gi>{{item.price}}</n-gi>
-            </div>
-        </n-grid>
-
-        <template #footer>
-            Total: ${{Total}}
-        </template>
-
-        <template #action>
-            <n-button type="primary" @click="NavigateToDestination()" class="button">
-                Navigate to Destination
-            </n-button>
-        </template>
-    </n-card>
+    <div>
+        <n-button type="info" @click="ViewCartClicked()" class="button">Place Order</n-button>
+    </div>
 </template>
   
   <script>
-  import { NButton, NCard, useNotification, NIcon, NTable, NGrid, NGi } from 'naive-ui'
-import router from '../router'
-import { useStore } from "../store"
-  import { CheckCircleRound } from '@vicons/material';
+  import { NButton,  useNotification, } from 'naive-ui'
+  import router from '../router'
+  import { useStore } from "../store"
+  
   export default {
     components: {
         NButton,
-        NCard,
-        CheckCircleRound,
-        NIcon,
-        NTable,
-        NGrid,
-        NGi
     },
-    name: 'OrderConfirmed',
+    name: 'PlaceOrder',
     data() {
         return {
             notification: useNotification(), 
         }
     },
     computed: {
-        Items() {
-            let cart = useStore();
-
-            return cart.Items;
-        },
-        Restaurant() {
-            let cart = useStore();
-
-            return cart.Restaurants[0];
+        RestaurantName() {
+            let routeParam = this.$route.params.restaurant;
+            console.log(routeParam);
+            console.log(this.$route.params);
+            let restaurant = this.restaurants[parseInt(routeParam)];
+            return restaurant.name;
         },
         Menu() {
             let routeParam = this.$route.params.restaurant;
             console.log(routeParam);
             let menu = this.menus[parseInt(routeParam)];
-            return menu.items;
+            let diet = this.dietaryRequirements;
+            let filteredItems = menu.items.filter((item) => {
+                let meetsReq = true;
+                for(let requirement of diet) {
+                    if (!item.dietSafe.includes(requirement)) {
+                        meetsReq = false;
+                    }
+                }
+                return meetsReq;
+            })
+            console.log(filteredItems);
+            return filteredItems;
         },
-        Total() {
-            let result = 0;
-            for(let item of this.Items) {
-                result += item.price;
-            }
-            return result
-        }
     }, 
     methods: {
-        ImgUrl() {
+        ImgUrl(image) {
             // var images = require.context('../assets/', false, /\.png$/)
             // let result = images('./' + image)
             // console.log(result);
             // return result;
-            return require('../assets/RestaurantsMapView.png')
+            return require('../assets/'+image)
         },
         ViewListClicked() {
             router.push('restaurant_list');
@@ -139,9 +96,6 @@ import { useStore } from "../store"
         },
         handleClose() {
             router.push("/");
-        },
-        NavigateToDestination() {
-            router.push("/")
         }
         
     }
@@ -164,7 +118,7 @@ import { useStore } from "../store"
   }
   .restaurantList {
     width: 400px;
-    height: 550px;
+    height: 500px;
   }
   .button {
     width: 396px;

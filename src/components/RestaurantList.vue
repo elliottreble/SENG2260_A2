@@ -1,35 +1,40 @@
 <template>
-    <n-card class="restaurantList" closable @close="handleClose">
-        <n-list>
-            <n-list-item v-for="(restaurant, index) in restaurants" :key="restaurant.name">
-                <n-button-group size="large">
-                    <n-button @click="ViewMenuClicked(index)"><n-avatar :src="ImgUrl(restaurant.img)" /></n-button>
-                    <n-button @click="ViewMenuClicked(index)">{{restaurant.name}}</n-button>
-                    <n-button disabled>{{restaurant.distance}}</n-button>
-                </n-button-group>
+    <n-card class="restaurantList" closable @close="handleClose" title="Restaurants">
+        <n-list hoverable clickable bordered>
+            <n-list-item v-for="(restaurant, index) in restaurants" :key="restaurant.name" @click="ViewMenuClicked(index)">
+                <n-grid cols="3">
+                    <n-gi>
+                        <n-avatar size="large" :src="ImgUrl(restaurant.img)" />
+                    </n-gi>
+                    <n-gi>
+                        {{restaurant.name}}
+                    </n-gi>
+                    <n-gi>
+                        {{restaurant.distance}}
+                    </n-gi>
+                </n-grid>
             </n-list-item>
         </n-list>
         <template #action>
-            <n-button-group size="large">
-                <n-button type="primary" @click="ViewCartClicked()">View Cart</n-button>
-                <n-button type="info" @click="ViewMapClicked()">View Map</n-button>
-            </n-button-group>
+            <action-footer></action-footer>
         </template>
     </n-card>
 </template>
   
   <script>
-  import { NButton, NAvatar, NList, NListItem, NCard, NButtonGroup } from 'naive-ui'
+  import { NAvatar, NList, NListItem, NCard, NGi, NGrid } from 'naive-ui'
 import router from '../router'
+import ActionFooter from "./ActionFooter.vue"
   
   export default {
     components: {
         NList,
         NListItem,
         NAvatar,
-        NButton,
         NCard,
-        NButtonGroup
+        NGi,
+        NGrid,
+        ActionFooter
     },
     name: 'RestaurantList',
     data() {
@@ -101,7 +106,7 @@ import router from '../router'
   }
   .restaurantList {
     width: 400px;
-    height: 500px;
+    height: 550px;
   }
   </style>
   

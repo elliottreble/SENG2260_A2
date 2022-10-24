@@ -35,6 +35,9 @@ export const useStore = defineStore('cart', {
     stepForward() {
       console.log("stepping")
       this.step ++;
+    },
+    removeItem(index) {
+      this.items.splice(index, 1);
     }
   },
   getters: {
